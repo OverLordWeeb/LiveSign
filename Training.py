@@ -1,15 +1,17 @@
 import os
 import json
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader, random_split
+
 import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
 
-# Define the CNN model
+
 class SignLanguageModel(nn.Module):
     def __init__(self, num_classes):
         super(SignLanguageModel, self).__init__()
@@ -37,7 +39,7 @@ def main():
 
     dataset_path = "C:\\Users\\pkucz\\Desktop\\datasetS"
 
-    # Augmentation
+    #augmentation
     transform = transforms.Compose([
         transforms.Resize((64, 64)),
         transforms.RandomHorizontalFlip(),
@@ -76,9 +78,9 @@ def main():
         start_epoch = checkpoint['epoch'] + 1
         print(f"Resuming training from epoch {start_epoch}")
     else:
-        print("Starting training from scratch")
+        print("starting training from nothing ")
 
-    for epoch in range(start_epoch, start_epoch + 4
+    for epoch in range(start_epoch, start_epoch + 5
                        ):
         model.train()
         total_train_loss = 0.0
@@ -127,9 +129,11 @@ def main():
         }, checkpoint_path)
         print(f"Checkpoint saved at epoch {epoch + 1}")
 
-    print("\nGenerating confusion matrix and classification report...")
+    print("\nmaking confusion matrix and classification report")
     all_preds = []
     all_labels = []
+
+
 
     model.eval()
     with torch.no_grad():
@@ -139,6 +143,8 @@ def main():
             _, predicted = torch.max(outputs, 1)
             all_preds.extend(predicted.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())
+
+
 
     cm = confusion_matrix(all_labels, all_preds)
     print("\nConfusion Matrix:")
@@ -150,5 +156,9 @@ def main():
     torch.save(model.state_dict(), "sign_language_modelhard.pth")
     print("\nFinal model saved to 'sign_language_modelhard.pth'")
 
+
+
+
 if __name__ == "__main__":
     main()
+

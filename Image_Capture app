@@ -35,9 +35,9 @@ def crop_combined_hands(image, hand_landmarks_list):
     x_all, y_all = [], []
 
     for hand_landmarks in hand_landmarks_list:
-        for lm in hand_landmarks.landmark:
-            x_all.append(lm.x * w)
-            y_all.append(lm.y * h)
+        for landmark_point in hand_landmarks.landmark:
+            x_all.append(landmark_point.x * w)
+            y_all.append(landmark_point.y * h)
 
     if not x_all or not y_all:
         return None
@@ -47,27 +47,29 @@ def crop_combined_hands(image, hand_landmarks_list):
     padding = 20
     return image[max(0, y_min - padding):min(h, y_max + padding), max(0, x_min - padding):min(w, x_max + padding)]
 
-def auto_capture_50_images(current_class, folder_type):
-    print("⏱ Capturing 50 images (0.5 sec between each)...")
+
+def auto_capture_50_images(capture_class, folder_type):
+    print(" Capturing 50 images (0.5 sec between each)...")
     captured = 0
     while captured < 50:
-        ret, frame = cap.read()
-        if not ret:
+        ret_cap, frame_cap = cap.read()
+        if not ret_cap:
             break
-        frame = cv2.flip(frame, 1)
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = hands.process(rgb)
-        if results.multi_hand_landmarks:
-            cropped = crop_combined_hands(frame, results.multi_hand_landmarks)
+        frame_cap = cv2.flip(frame_cap, 1)
+        rgb_cap = cv2.cvtColor(frame_cap, cv2.COLOR_BGR2RGB)
+        results_cap = hands.process(rgb_cap)
+        if results_cap.multi_hand_landmarks:
+            cropped = crop_combined_hands(frame_cap, results_cap.multi_hand_landmarks)
             if cropped is not None:
-                save_path = os.path.join(base_dir, folder_type, current_class)
+                save_path = os.path.join(base_dir, folder_type, capture_class)
                 os.makedirs(save_path, exist_ok=True)
                 resized = cv2.resize(cropped, image_size)
-                filename = f"{current_class}_{int(time.time() * 1000)}.jpg"
+                filename = f"{capture_class}_{int(time.time() * 1000)}.jpg"
                 cv2.imwrite(os.path.join(save_path, filename), resized)
                 print(f"📸 Saved ({captured+1}/50): {filename}")
                 captured += 1
         time.sleep(delay_between_captures)
+
 
 print("INSTRUCTIONS:")
 print(" - Press a letter key (A-Z) or number (0-9) to set class label.")
@@ -113,7 +115,7 @@ while True:
             new_class = chr(key).upper()
             if new_class.isalnum():
                 current_class = new_class
-                print(f"🔤 Switched to class: {current_class}")
+                print(f" Switched to class: {current_class}")
         except ValueError:
             pass
 

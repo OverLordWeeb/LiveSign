@@ -35,7 +35,7 @@ class SignLanguageModel(nn.Module):
 class SignTranslatorApp:
     def __init__(self, window, model_path):
         self.window = window
-        self.window.title("Sign Language Chat Translator")
+        self.window.title("SignLive Chat Translator")
         self.window.geometry("1200x700")
 
         with open("class_labels.json", "r") as f:

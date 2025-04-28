@@ -4,11 +4,11 @@ import numpy as np
 import time
 import mediapipe as mp
 
-# ===== CONFIG =====
+        #config 
 base_dir = "captured_dataset"
 image_size = (64, 64)
 delay_between_captures = 0.5  # seconds between each of 50 captures
-# ===================
+
 
 cap = cv2.VideoCapture(0)
 mp_hands = mp.solutions.hands

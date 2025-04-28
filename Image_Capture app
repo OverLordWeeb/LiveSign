@@ -48,6 +48,8 @@ def crop_combined_hands(image, hand_landmarks_list):
     return image[max(0, y_min - padding):min(h, y_max + padding), max(0, x_min - padding):min(w, x_max + padding)]
 
 
+
+
 def auto_capture_50_images(capture_class, folder_type):
     print(" Capturing 50 images (0.5 sec between each)...")
     captured = 0
@@ -66,15 +68,9 @@ def auto_capture_50_images(capture_class, folder_type):
                 resized = cv2.resize(cropped, image_size)
                 filename = f"{capture_class}_{int(time.time() * 1000)}.jpg"
                 cv2.imwrite(os.path.join(save_path, filename), resized)
-                print(f"📸 Saved ({captured+1}/50): {filename}")
+                print(f" Saved ({captured+1}/50): {filename}")
                 captured += 1
         time.sleep(delay_between_captures)
-
-
-print("INSTRUCTIONS:")
-print(" - Press a letter key (A-Z) or number (0-9) to set class label.")
-print(" - Press SPACE to capture 50 cropped hand images (0.5 sec each).")
-print(" - Press 'q' to quit.")
 
 while True:
     ret, frame = cap.read()
@@ -109,16 +105,17 @@ while True:
     elif key == 32 and class_type:
         auto_capture_50_images(current_class, class_type)
 
-    # Class switching
+
     elif key != -1:
         try:
             new_class = chr(key).upper()
             if new_class.isalnum():
                 current_class = new_class
-                print(f" Switched to class: {current_class}")
+                print(f" switched to class: {current_class}")
         except ValueError:
             pass
 
 cap.release()
 cv2.destroyAllWindows()
 hands.close()
+

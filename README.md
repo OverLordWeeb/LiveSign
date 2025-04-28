@@ -1,3 +1,6 @@
+eneter into terminal first     =    pip install -r requirements.txt
+to install all requirements.
+
 camera applcation needs python 3.11
 image capture applcation needs python 3.11
 model training code needs python 3.13
